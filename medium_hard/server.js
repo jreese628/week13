@@ -1,33 +1,27 @@
-var express = require("express");
+const express = require("express");
 
-var app = express();
+const app = express();
 
-var data = require("./public/database.json");
+const data = require("./employees.json");
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-app.get("/workers", (req, res) => {
+app.get("/api/employees", (req, res) => {
   if (!data) {
     res.status(404).send("Could not find information");
   }
   res.send(data);
 });
 
-app.get("/workers/:id", (req, res) => {
-  /* finding an ID: created a const named findEmployee, pulled data from data uptop and did .workers to retrieve info from worker array  */
-
-  const findEmployee = data.workers.find(function (employee) {
-    return parseInt(req.params.id) === employee.id;
+app.get("/employees/:id", (req, res) => {
+  const findID = data.workers.find(function (employee) {
+    return parseInt(req.params.id) == employee.id;
   });
-
-  if (!findEmployee) {
-    res.status(404).send("Could not find information");
+  if (!findID) {
+    res.status(404).send("Error 404 Page Not Found");
   }
-  res.send(findEmployee);
+  res.send(findID);
 });
 
-app.listen(3000);
+const port = process.env.PORT || 3002;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
